@@ -9,6 +9,8 @@ main(){
     kubectl_install
     minikube_install
     powershell_install
+    terraform_install
+    misc
     cleanup
 }
 
@@ -22,9 +24,8 @@ get_packages(){
 }
 
 add_sources(){
-    echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-    apt install terraform -y
 }
 
 docker_install(){
@@ -52,6 +53,13 @@ minikube_install(){
 powershell_install(){
     dpkg -i packages-microsoft-prod.deb
     apt install -y powershell
+}
+
+terraform_install(){
+    apt install terraform
+}
+misc(){
+    apt install -y gcc python make 
 }
 
 cleanup(){
