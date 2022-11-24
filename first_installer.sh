@@ -3,7 +3,7 @@
 main(){
     get_packages
     add_sources
-    apt update
+    apt update -y
     docker_install
     ftkimager_install
     kubectl_install
