@@ -1,6 +1,7 @@
 #!/bin/bash
 
 main(){
+    misc
     get_packages
     add_sources
     apt update -y
@@ -10,7 +11,6 @@ main(){
     minikube_install
     powershell_install
     terraform_install
-    misc
     cleanup
 }
 
@@ -21,6 +21,8 @@ get_packages(){
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     curl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     curl -sLO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+    curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
+    curl -sL "https://discord.com/api/download?platform=linux&format=deb" -o "discord.deb"
 }
 
 add_sources(){
@@ -58,8 +60,24 @@ powershell_install(){
 terraform_install(){
     apt install terraform
 }
+
+halyard_install(){
+    bash ./InstallHalyard.sh
+}
+
+discord_install(){
+    dpkg -i discord.deb
+}
+
 misc(){
-    apt install -y gcc python make 
+    apt install -y 
+        gcc \
+        python \
+        make \ 
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
 }
 
 cleanup(){
