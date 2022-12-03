@@ -23,11 +23,14 @@ get_packages(){
     curl -sLO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
     curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
     curl -sL "https://discord.com/api/download?platform=linux&format=deb" -o "discord.deb"
+    curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
 }
 
 add_sources(){
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
 }
 
 docker_install(){
@@ -43,7 +46,7 @@ ftkimager_install(){
 }
 
 kubectl_install(){
-    if `echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check` == 'OK'; then
+    if [[ $(echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check) == 'OK' ]]; then
       install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     fi
 }
@@ -70,10 +73,11 @@ discord_install(){
 }
 
 misc(){
-    apt install -y 
+    apt install -y \
+        jq \
         gcc \
         python \
-        make \ 
+        make \
         ca-certificates \
         curl \
         gnupg \
@@ -81,8 +85,8 @@ misc(){
 }
 
 cleanup(){
-    for file in `ls | grep -Ev ".sh$"`; do
-        rm -f $file
+    for file in $(ls | grep -Ev ".sh$") ; do
+        rm -f "$file"
     done
 }
 
