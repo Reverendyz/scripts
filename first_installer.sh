@@ -2,6 +2,7 @@
 
 main(){
     misc
+    fix_dualboot_clock
     get_packages
     add_sources
     apt update -y
@@ -82,6 +83,10 @@ misc(){
         curl \
         gnupg \
         lsb-release
+}
+
+fix_dualboot_clock(){
+    timedatectl set-local-rtc 1
 }
 
 cleanup(){
