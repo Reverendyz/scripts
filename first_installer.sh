@@ -73,6 +73,10 @@ discord_install(){
     dpkg -i discord.deb
 }
 
+install_change_audio_util(){
+    install change_audio.sh /usr/local/bin/chau
+}
+
 misc(){
     apt install -y \
         jq \
@@ -82,7 +86,12 @@ misc(){
         ca-certificates \
         curl \
         gnupg \
-        lsb-release
+        lsb-release \
+        i3 \
+        i3-wm \
+        i3status \
+        zsh \
+        terminator \
 }
 
 fix_dualboot_clock(){
